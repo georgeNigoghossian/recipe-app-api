@@ -12,8 +12,7 @@ class ModelTests(TestCase):
     def test_create_user_with_email_successful(self):
         email = 'test@example.com'
         password = 'testpass123'
-        user = get_user_model().objects.create_user(email=email,
-                                                    password=password)
+        user = create_user(email=email, password=password)
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
@@ -27,7 +26,7 @@ class ModelTests(TestCase):
         ]
 
         for email, expected in sample_emails:
-            user = get_user_model().objects.create_user(email, 'sample123')
+            user = create_user(email, 'sample123')
             self.assertEquals(user.email, expected)
 
     def test_new_user_without_email_raises_error(self):
@@ -44,8 +43,7 @@ class ModelTests(TestCase):
         self.assertTrue(user.is_staff)
 
     def test_create_recipe(self):
-        user = get_user_model().objects.create_user(
-            email='test@example.com', password='testpass123')
+        user = create_user()
 
         recipe = models.Recipe.objects.create(
             user=user,
@@ -62,3 +60,10 @@ class ModelTests(TestCase):
         tag = models.Tag.objects.create(user=user, name='Tag1')
 
         self.assertEqual(str(tag), tag.name)
+
+    def test_create_ingredient(self):
+        user = create_user()
+        ingredient = models.Ingredient.objects.create(user=user,
+                                                      name='Ingredient1')
+
+        self.assertEqual(str(ingredient), ingredient.name)
